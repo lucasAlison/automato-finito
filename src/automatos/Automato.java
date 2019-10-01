@@ -14,7 +14,6 @@ public class Automato {
     private ArrayList<Estado> estados;
     private Estado estadoInicial;
     private Estado estadoAtual;
-    private Boolean ehInicio;
     private String resultado;
     private Long status;
     private String palavra;
@@ -26,7 +25,6 @@ public class Automato {
         this.estados = estados;
         this.estadoInicial = estadoInicial;
         this.estadoAtual = this.estadoInicial;
-        this.ehInicio = true;
         this.mapStatus = new HashMap<>();
         this.mapStatus.put(1l,"Operador aritmético: ");
         this.mapStatus.put(2l,"ERRO: símbolo(s) inválido(s): ");
@@ -71,7 +69,6 @@ public class Automato {
     
     private void resetar(){
         this.estadoAtual = this.estadoInicial;
-        this.ehInicio = true;
         this.palavra = "";
         this.status = null;
     }
@@ -90,53 +87,25 @@ public class Automato {
                 resultado += mapStatus.get(1l)+valor+"\n";    
                 resetar();
             }else{
-                if (ehInicio){
-                    if (!simbolos.contains(valor)){
-                        this.ehInicio = false;
-                        this.palavra += valor;
-                        if (this.status == null  || this.status == 4l || this.status == 3l ){
-                            this.status = 2l;
-                        }
-                    }else{
-                        if (this.estadoAtual.getSaidas().contains(valor)){
-                            this.estadoAtual = this.estadoAtual.getProximoEstado(valor);
-                            this.palavra += valor;
-                            if (this.status != null && this.status != 3l && this.status != 2l){
-                                this.status = 4l;
-                            }else if (this.status == null){
-                                this.status = 4l;
-                            }            
-                        }else{
-                            this.ehInicio = false;
-                            this.palavra += valor;
-                            this.status = 3l;
-                        }
+                if (!simbolos.contains(valor)){
+                    this.palavra += valor;
+                    if (this.status == null  || this.status == 4l || this.status == 3l ){
+                        this.status = 2l;
                     }
                 }else{
-                    if (!simbolos.contains(valor)){
-                        this.ehInicio = false;
+                    if (this.estadoAtual.getSaidas().contains(valor)){
+                        this.estadoAtual = this.estadoAtual.getProximoEstado(valor);
                         this.palavra += valor;
-                        if (this.status == null || this.status == 4l || this.status == 3l ){
-                            this.status = 2l;
-                        }
+                        if (this.status != null && this.status != 3l && this.status != 2l){
+                            this.status = 4l;
+                        }else if (this.status == null){
+                            this.status = 4l;
+                        }            
                     }else{
-                        if (this.estadoAtual.getSaidas().contains(valor)){
-                            this.estadoAtual = this.estadoAtual.getProximoEstado(valor);
-                            this.palavra += valor;
-                            if (this.status != null && this.status != 3l && this.status != 2l){
-                                this.status = 4l;
-                            }else if (this.status == null){
-                                this.status = 4l;
-                            } 
-                        }else{
-                            this.ehInicio = false;
-                            this.palavra += valor;
-                            if (this.status == null || (this.status != null && this.status != 2l)){
-                                this.status = 3l;
-                            }                            
-                        }
+                        this.palavra += valor;
+                        this.status = 3l;
                     }
-                }   
+                }
             }         
         }                
     }
