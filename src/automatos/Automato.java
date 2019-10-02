@@ -76,34 +76,46 @@ public class Automato {
     public void Andar(String valor){        
         if (!simboloValido(valor)){
             if (this.palavra != null && !this.palavra.isEmpty()){
-                resultado += mapStatus.get(this.status)+this.palavra+"\n";
+                resultado += mapStatus.get((this.status == null ? 3l : this.status))+this.palavra+"\n";
             }
             resetar();
         }else{
             if (operadores.contains(valor)){     
                 if (this.palavra != null && !this.palavra.isEmpty()){
-                    resultado += mapStatus.get(this.status)+this.palavra+"\n";
+                    resultado += mapStatus.get((this.status == null ? 3l : this.status))+this.palavra+"\n";
                 }
                 resultado += mapStatus.get(1l)+valor+"\n";    
                 resetar();
             }else{
                 if (!simbolos.contains(valor)){
-                    this.palavra += valor;
-                    if (this.status == null  || this.status == 4l || this.status == 3l ){
+                    if (this.palavra == null || this.palavra.isEmpty()){
                         this.status = 2l;
+                    }else{
+                        if (this.status == null  || this.status != 2l){
+                            this.status = 3l;                            
+                        }
                     }
+                    this.palavra += valor;
                 }else{
                     if (this.estadoAtual.getSaidas().contains(valor)){
                         this.estadoAtual = this.estadoAtual.getProximoEstado(valor);
-                        this.palavra += valor;
-                        if (this.status != null && this.status != 3l && this.status != 2l){
-                            this.status = 4l;
-                        }else if (this.status == null){
-                            this.status = 4l;
-                        }            
+                        this.palavra += valor;                        
+                        if (this.status == null || this.status != 2L){
+                            if (this.estadoAtual.getEhFinal()){
+                                if (this.status == null){
+                                    this.status = 4l;                                                                                                                                            
+                                }
+                            }else{
+                                if (this.status != null && this.status != 3){
+                                    this.status = null;                                    
+                                }
+                            }
+                        }
                     }else{
-                        this.palavra += valor;
-                        this.status = 3l;
+                        if (this.status == null || this.status != 2L){
+                            this.palavra += valor;
+                            this.status = 3l;                            
+                        }
                     }
                 }
             }         
@@ -113,7 +125,7 @@ public class Automato {
 
     public String getResultado(){
         if (this.palavra != null && !this.palavra.isEmpty()){
-            resultado += mapStatus.get(this.status)+this.palavra+"\n";
+            resultado += mapStatus.get((this.status == null ? 3l : this.status))+this.palavra+"\n";
         }
         resetar();
         return this.resultado;

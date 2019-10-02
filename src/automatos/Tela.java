@@ -117,6 +117,10 @@ public class Tela extends javax.swing.JFrame {
         simbolos.add("c");
         simbolos.add("d");
         simbolos.add("e");
+        simbolos.add("+");
+        simbolos.add("-");
+        simbolos.add("*");
+        simbolos.add("/");
         ArrayList<String> operadores = new ArrayList<>();
         operadores.add("+");
         operadores.add("-");
